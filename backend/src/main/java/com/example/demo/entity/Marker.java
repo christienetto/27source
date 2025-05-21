@@ -1,10 +1,7 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Table(name = "markers")
@@ -12,9 +9,13 @@ public class Marker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
-    private Double latitude;
-    private Double longitude;
+    private Float latitude;
+    private Float longitude;
+
+    @Column(name = "geom", columnDefinition = "geometry(Point, 4326)")
+    private Point location;
 
     public Marker() {}
 
@@ -32,18 +33,24 @@ public class Marker {
         this.name = name;
     }
 
-    public Double getLatitude() {
+    public Float getLatitude() {
         return latitude;
     }
-    public void setLatitude(Double latitude) {
+    public void setLatitude(Float latitude) {
         this.latitude = latitude;
     }
 
-    public Double getLongitude() {
+    public Float getLongitude() {
         return longitude;
     }
-    public void setLongitude(Double longitude) {
+    public void setLongitude(Float longitude) {
         this.longitude = longitude;
     }
-}
 
+    public Point getLocation() {
+        return location;
+    }
+    public void setLocation(Point location) {
+        this.location = location;
+    }
+}

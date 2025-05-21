@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 
 @RestController
 @RequestMapping("/markers")
@@ -27,13 +30,29 @@ public class MarkerController {
             @ApiResponse(responseCode = "200", description = "Marker added successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid marker location")
     })
+
     @PostMapping
-    public ResponseEntity<MarkerRequestResponse> postMarker( @RequestBody MarkerRequest body ) {
-        System.out.println(body.name);
-        if (body.name.equals("Helsinki")) {
-            return new ResponseEntity<>(new MarkerRequestResponse("Added shit"), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new MarkerRequestResponse("Shit not added"), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<MarkerRequestResponse> postMarker(@RequestBody MarkerRequest body) {
+        // Create Marker entity
+        Marker marker = new Marker();
+        marker.setName(body.name);
+        marker.setLatitude(body.latitude);
+        marker.setLongitude(body.longitude);
+
+        // Create geometry point from lat/lng
+        GeometryFactory geometryFactory = new GeometryFactory();
+        Point point = geometryFactory.createPoint(new Coordinate(body.longitude, body.latitude));
+        point.setSRID(4326); // Set correct spatial reference system
+        marker.setLocation(point);
+
+        System.out.println("Created point: " + point.toText());
+
+
+        // Save to database
+        markerRepository.save(marker);
+
+        return new ResponseEntity<>(new MarkerRequestResponse("Added"), HttpStatus.OK);
     }
+
 }
 

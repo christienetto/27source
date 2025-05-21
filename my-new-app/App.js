@@ -17,13 +17,7 @@ const style = {
                 },
                 "martin": {
                         "type": "vector",
-                        "tiles": ["http://192.168.0.117:3000/nyc_homicides/{z}/{x}/{y}"],
-                        "attribution": "Martin",
-                        "maxzoom": 19
-                },
-                "martin_streets": {
-                        "type": "vector",
-                        "tiles": ["http://192.168.0.117:3000/nyc_streets/{z}/{x}/{y}"],
+                        "tiles": ["http://172.20.10.12:3000/markers/{z}/{x}/{y}","http://172.20.10.12:3000/nyc_homicides/{z}/{x}/{y}"],
                         "attribution": "Martin",
                         "maxzoom": 19
                 }
@@ -37,14 +31,15 @@ const style = {
                         "source": "osm" // This must match the source key above
                 },
                 {
-                        "id": "anythingstreets",
-                        "type": "line",
-                        "source": "martin_streets",
-                        "source-layer": "nyc_streets",
+                        "id": "helsinki-points",
+                        "type": "circle",
+                        "source": "martin",
+                        "source-layer": "markers", // <- must match what Martin advertises
                         "paint": {
-                                "line-color": "#1e90ff",
-                                "line-width": 3
-                        }
+                        "circle-radius": 6,
+                        "circle-color": "#FF0000"
+                }
+
                 },
                 {
                         "id": "anythinghomicides",
@@ -53,6 +48,16 @@ const style = {
                         "source-layer": "nyc_homicides",
                         "paint": {
                                 "circle-color": "#888888",
+                        }
+                },
+                {
+                        "id": "anythingstreets",
+                        "type": "line",
+                        "source": "martin",
+                        "source-layer": "nyc_streets",
+                        "paint": {
+                                "line-color": "#1e90ff",
+                                "line-width": 3
                         }
                 },
                 // {
@@ -105,10 +110,10 @@ export default function App() {
                 <SafeAreaView style={styles.container}>
                         <Text style={styles.header}>My Basic UI</Text>
                         <MapView style={{ flex: 1 }} mapStyle={style} onPress={handleClick} >
-                                <Camera zoomLevel={10} centerCoordinate={[-73.87246876634194, 40.721690353663405]}/>
+                                <Camera zoomLevel={5} centerCoordinate={[25.1699,50.9384]}/>
                                 <PointAnnotation
                                         id="marker-1"
-                                        snippet="kurwa"
+                                        snippet=" YEA"
                                         coordinate={coords} // [longitude, latitude]
                                         onSelected={function() {
 
